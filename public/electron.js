@@ -1,23 +1,30 @@
 const path = require('path');
 
-const { app, BrowserWindow, Menu, Tray } = require('electron');
+const { app, BrowserWindow, Menu, Tray, Notification, ipcMain, dialog } = require('electron');
+
+const NOTIFICATION_TITLE = 'This is Electron Notification'
+const NOTIFICATION_BODY = 'Main Process in Electron started'
+
 const isDev = require('electron-is-dev');
-
+const fs = require('fs');
+const csv = require('csv-parser'); 
 let tray = null
-
+let mainWin = null
 
 
 
 function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
+  const win = mainWin = new BrowserWindow({
     width: 450,
     height: 500,
-    fullscreen: true,
+    //fullscreen: true,
     icon: "extraResources/favicon.ico",
     webPreferences: {
-      nodeIntegration: true,
-      enableRemoteModule: true,
+      // nodeIntegration: false,
+      // enableRemoteModule: false,
+      // contextIsolation: true,
+      preload: path.join(app.getAppPath(), isDev ? 'public' : '', 'preload.js'),
     },
   });
 
@@ -59,10 +66,13 @@ function createWindow() {
 
 }
 
+function showNotification () {
+  // new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show()
+}
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(createWindow);
+app.whenReady().then(createWindow).then(showNotification);
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -78,3 +88,46 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+ipcMain.on('openFileDialogSync', (event, args) => {
+  event.returnValue = dialog.showOpenDialogSync()
+})
+
+ipcMain.on('fullScreen', (event, args) => {
+  mainWin.fullScreen = !mainWin.fullScreen;
+})
+
+ipcMain.on('saveFile', (event, args) => {
+  console.log(args)
+  fs.appendFile(args[0], args[1], (err) => {
+    if (err) {
+      console.log(err);
+    }})
+  event.returnValue = true
+})
+ipcMain.on('readFile', (event, args) => {
+  const toDoList = []
+  console.log(args)
+  fs.createReadStream(args)
+  .pipe(csv())
+  .on('data', function (row) {
+    // console.log('some data')
+    // console.log("hier schould be row ------>", row)
+    const toDoItem = {
+        date: row.Datum,
+        text: row.Text,
+        done: row.Done
+    }
+    // console.log("hier schould be todoitem ------>", toDoItem)
+    toDoList.push(toDoItem)
+  })
+  .on('end', function () {
+    console.log("hier schould be todolist ------>")//, toDoList)
+    console.table(toDoList)
+    event.returnValue = toDoList
+      
+      // TODO: SAVE users data to another file
+    })
+  .on('error', () => event.returnValue = false)
+  // event.returnValue = false
+})

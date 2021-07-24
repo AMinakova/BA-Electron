@@ -47,3 +47,13 @@
 .welcomeText {
   margin-bottom: 20px;
 }
+
+.padding {
+  padding: 20px;
+}
+.inputField {
+  height: 300px;
+}
+.button {
+  padding: 20px;
+}
