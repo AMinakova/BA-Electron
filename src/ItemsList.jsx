@@ -17,7 +17,8 @@ export default function ItemsList(props) {
     }
 
 
-    return <div className="padding">
+    return <div>
+            <h2>Deine ToDo Liste</h2>
             <Table striped bordered hover>
                 <thead>
                     <tr>

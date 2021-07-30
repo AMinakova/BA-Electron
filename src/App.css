@@ -38,22 +38,33 @@
 }
 
 .welcome {
-  margin: 40px;
+  align-content: center;
+  height: 100%;
 } 
 
 .button {
   margin: 10px;
 }
+
+.icon {
+  text-align: right;
+}
+
+.buttonGroup {
+  text-align: center;
+}
 .welcomeText {
-  margin-bottom: 20px;
+  margin: 20px;
 }
 
 .padding {
-  padding: 20px;
+  padding: 50px;
+  align-content: center;
+  height:100%;
 }
 .inputField {
-  height: 300px;
+  padding: 20px 0px 20px 0px;
+  height: 80%;
 }
 .button {
-  padding: 20px;
 }

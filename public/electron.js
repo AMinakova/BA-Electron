@@ -16,9 +16,8 @@ let mainWin = null
 function createWindow() {
   // Create the browser window.
   const win = mainWin = new BrowserWindow({
-    width: 450,
+    width: 650,
     height: 500,
-    //fullscreen: true,
     icon: "extraResources/favicon.ico",
     webPreferences: {
       // nodeIntegration: false,

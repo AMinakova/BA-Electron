@@ -8,6 +8,7 @@ export default function CreateToDo(props) {
 
     console.log(toDoText)
     return <div className="addTodo">
+                <h2>ToDo hinzufügen:</h2>
                 <FormControl 
                     className="inputField" 
                     as="textarea" 
