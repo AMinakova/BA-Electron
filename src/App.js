@@ -19,6 +19,10 @@ export default function App() {
     setState(2)
   }
 
+  const showOpenedItemsList = (toDoList) => {
+    setToDoList(toDoList)
+    setState(2)
+  }
   const showNotification = () => {
     return new Notification('Erfolg', {
       body: 'ToDo Eintrag ist gespeichert'
@@ -50,7 +54,7 @@ export default function App() {
   function getPage(state) {
     switch(state) {
       case 0:
-        return <Welcome showCreateToDo={showCreateToDo}/>;
+        return <Welcome showCreateToDo={showCreateToDo} showOpenedItemsList={showOpenedItemsList}/>;
       case 1:
         return <CreateToDo showItemsList={showItemsList} saveToDoItem={saveToDoItem}/>;
       case 2:

@@ -9,6 +9,7 @@ import React from 'react'
 
 export default function Welcome(props) {
   
+
   
   const setFullScreen = () => {
     window.rpc.req('fullScreen');
@@ -23,9 +24,9 @@ export default function Welcome(props) {
     const fileNames = window.rpc.reqSync('openFileDialogSync');
     if(fileNames) {
         const toDoList = window.rpc.reqSync('readFile', fileNames[0])
-        console.log(toDoList)
+        props.showOpenedItemsList(toDoList)
     }
-    console.log(fileNames)
+    
   }
 
   return (

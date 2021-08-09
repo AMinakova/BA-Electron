@@ -3,9 +3,19 @@ import { Table, Button, InputGroup } from 'react-bootstrap';
 import './App.css';
 
 export default function ItemsList(props) {
+    
 
-
-
+    const smalltalk = require('smalltalk');
+    const showPrompt = () => {
+        smalltalk
+        .prompt('Bennen deine Liste!', 'Tipp Name von deiner Liste:', '10')
+        .then((value) => {
+            console.log(value);
+        })
+        .catch(() => {
+            console.log('cancel');
+        });
+    }
 
     function renderItem(toDoItem, index) {
         return <tr key={index}>
@@ -32,7 +42,7 @@ export default function ItemsList(props) {
                     {props.toDoList.map(renderItem)}
                 </tbody>
             </Table>
-            <Button className="button" variant="primary" onClick={props.writeToCSVFile}>Liste speichern</Button>{' '}
+            <Button className="button" variant="primary" onClick={showPrompt}>Liste speichern</Button>{' '}
             <Button className="button" variant="outline-primary" onClick={props.showCreateToDo}>ToDo hinzufügen</Button>{' '}
         </div>
 }

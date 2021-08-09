@@ -17,7 +17,7 @@ function createWindow() {
   // Create the browser window.
   const win = mainWin = new BrowserWindow({
     width: 650,
-    height: 500,
+    height: 450,
     icon: "extraResources/favicon.ico",
     webPreferences: {
       // nodeIntegration: false,
@@ -68,10 +68,38 @@ function createWindow() {
 function showNotification () {
   // new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show()
 }
+
+function setMainMenu() {
+  const template = [
+    {
+      label: 'File',
+      submenu: [
+        {
+          label: 'Open',
+          accelerator: 'Ctrl + F1',
+          click() {
+            const result = dialog.showOpenDialogSync()
+
+          }
+        },
+        { type: 'separator' },
+        {
+          label: 'Close',
+          accelerator: 'Ctrl + F2',
+          click() {
+              app.quit();
+          }
+        }
+      ]
+    }
+  ];
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(createWindow).then(showNotification);
+app.whenReady().then(createWindow).then(setMainMenu).then(showNotification);
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -89,7 +117,14 @@ app.on('activate', () => {
 });
 
 ipcMain.on('openFileDialogSync', (event, args) => {
-  event.returnValue = dialog.showOpenDialogSync()
+  const options = { 
+    title: "Öffnen Sie .csv Datei",
+    filters: [{
+      name: ".csv Files",
+      extensions: ["csv"]
+    }]
+  }
+  event.returnValue = dialog.showOpenDialogSync(options)
 })
 
 ipcMain.on('fullScreen', (event, args) => {
