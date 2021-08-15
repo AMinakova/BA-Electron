@@ -115,6 +115,36 @@ app.on('activate', () => {
   }
 });
 
+ipcMain.on('showGlobalContextMenu', (event) => {
+  const template = [
+    { label: 'Global Menu Item 1 (no action)', },
+    { type: 'separator' },
+    {
+      label: 'Open File',
+      click() {
+        event.sender.send('startOpenFile');
+      },
+    }
+  ]
+  const menu = Menu.buildFromTemplate(template)
+  menu.popup(BrowserWindow.fromWebContents(event.sender))
+})
+
+ipcMain.on('showTodoItemContextMenu', (event, itemId) => {
+  const template = [
+    { label: 'Todo Item ctx menu (no action)', },
+    { type: 'separator' },
+    {
+      label: 'Delete this item',
+      click() {
+        event.sender.send('deleteTodoItem', itemId)
+      },
+    }
+  ]
+  const menu = Menu.buildFromTemplate(template)
+  menu.popup(BrowserWindow.fromWebContents(event.sender))
+})
+
 ipcMain.on('openFileDialogSync', (event, args) => {
   const options = { 
     title: "Öffnen Sie .csv Datei",

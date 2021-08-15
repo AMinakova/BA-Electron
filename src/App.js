@@ -11,12 +11,33 @@ export default function App() {
   const [toDoList, setToDoList] = useState([])
 
   useEffect(() => {
-    window.rpc.bind('startOpenFile', openFileWithDialog);
-    return function() {
-      window.rpc.unbindAll('startOpenFile');
+    function ctxMenuHandler(event) {
+      event.preventDefault()
+      const dataEl = event.target.closest('.todoItem-data')
+      if (dataEl) { // todo item record in grid
+        const id = dataEl.dataset.id;
+        window.rpc.req('showTodoItemContextMenu', id)
+      }
+      else {
+        window.rpc.req('showGlobalContextMenu')
+      }
     }
+
+    window.addEventListener('contextmenu', ctxMenuHandler)
+
+    return () => window.removeEventListener('contextmenu', ctxMenuHandler)
+  }, []);
+  
+  useEffect(() => {
+    window.rpc.bind('deleteTodoItem', deleteItem);
+    return () => window.rpc.unbindAll('deleteTodoItem');
   })
   
+  useEffect(() => {
+    window.rpc.bind('startOpenFile', openFileWithDialog);
+    return () => window.rpc.unbindAll('startOpenFile');
+  })
+
   const showCreateToDo = () => {
     setState(1);
   }
@@ -27,6 +48,11 @@ export default function App() {
   const showOpenedItemsList = (toDoList) => {
     setToDoList(toDoList)
     setState(2)
+  }
+
+  function deleteItem(idStr) {
+    const todoId = +idStr;
+    setToDoList(prevTodos => prevTodos.filter((_el, arrIdx) => arrIdx !== todoId))
   }
 
   const showNotification = () => {

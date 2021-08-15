@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Table, Button, InputGroup } from 'react-bootstrap';
 import './App.css';
 
@@ -18,7 +18,7 @@ export default function ItemsList(props) {
     }
 
     function renderItem(toDoItem, index) {
-        return <tr key={index}>
+        return <tr key={index} className='todoItem-data' data-id={index}>
                     <td>{index + 1}</td>
                     <td>{(new Date(toDoItem.date)).toLocaleDateString()}</td>
                     <td>{toDoItem.text}</td>

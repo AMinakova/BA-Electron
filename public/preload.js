@@ -1,12 +1,16 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
+
+const bindableRendererEvents = ['startOpenFile', 'deleteTodoItem'];
+const validBindableChannel = (channel) => bindableRendererEvents.includes(channel);
+
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld(
     'rpc', {
         req: (channel, data) => {
             // whitelist channels
-            let validChannels = ['fullScreen'];
+            let validChannels = ['fullScreen', 'showGlobalContextMenu', 'showTodoItemContextMenu'];
             if (validChannels.includes(channel)) {
                 ipcRenderer.send(channel, data);
             }
@@ -20,15 +24,13 @@ contextBridge.exposeInMainWorld(
         },
 
         bind: (channel, func) => {
-            let validChannels = ['startOpenFile'];
-            if (validChannels.includes(channel)) {
+            if (validBindableChannel(channel)) {
                 // Deliberately strip event as it includes `sender` 
-                ipcRenderer.on(channel, (event, ...args) => func(...args));
+                ipcRenderer.on(channel, (_event, ...args) => func(...args));
             }
         },
-        unbindAll: (channel, func) => {
-            let validChannels = ['startOpenFile'];
-            if (validChannels.includes(channel)) {
+        unbindAll: (channel) => {
+            if (validBindableChannel(channel)) {
                 ipcRenderer.removeAllListeners(channel);
             }
         },
