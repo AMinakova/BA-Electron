@@ -22,7 +22,6 @@ export default function ItemsList(props) {
                     <td>{index + 1}</td>
                     <td>{(new Date(toDoItem.date)).toLocaleDateString()}</td>
                     <td>{toDoItem.text}</td>
-                    <td><InputGroup.Checkbox /></td>
                 </tr>
     }
 
@@ -35,7 +34,6 @@ export default function ItemsList(props) {
                     <th>#</th>
                     <th>Date</th>
                     <th>ToDo</th>
-                    <th>Done</th>
                     </tr>
                 </thead>
                 <tbody>
