@@ -6,7 +6,6 @@ import './App.css';
 export default function CreateToDo(props) {
     const [ toDoText, setToDoText] = useState("")
 
-    console.log(toDoText)
     return <div className="addTodo">
                 <h2>ToDo hinzufügen:</h2>
                 <FormControl

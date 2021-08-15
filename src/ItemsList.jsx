@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Button, InputGroup } from 'react-bootstrap';
+import { Table, Button } from 'react-bootstrap';
 import './App.css';
 
 export default function ItemsList(props) {
@@ -8,22 +8,19 @@ export default function ItemsList(props) {
     const smalltalk = require('smalltalk');
     const showPrompt = () => {
         smalltalk
-        .prompt('Bennen deine Liste!', 'Tipp Name von deiner Liste:', '10')
-        .then((value) => {
-            console.log(value);
-        })
-        .catch(() => {
-            console.log('cancel');
-        });
+            .prompt('Bennen deine Liste!', 'Tipp Name von deiner Liste:', 'Meine Liste')
+            .then((value) => {
+                props.saveFile && props.saveFile(value)
+            })
+            .catch(() => { });
     }
 
-    function renderItem(toDoItem, index) {
-        return <tr key={index} className='todoItem-data' data-id={index}>
-                    <td>{index + 1}</td>
-                    <td>{(new Date(toDoItem.date)).toLocaleDateString()}</td>
-                    <td>{toDoItem.text}</td>
-                </tr>
-    }
+    const renderItem = (toDoItem, index) =>
+        <tr key={index} className='todoItem-data' data-id={index}>
+            <td>{index + 1}</td>
+            <td>{toDoItem.date.toLocaleDateString('de-DE', { dateStyle: 'medium' })}</td>
+            <td>{toDoItem.text}</td>
+        </tr>
 
 
     return <div>
@@ -31,9 +28,9 @@ export default function ItemsList(props) {
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                    <th>#</th>
-                    <th>Date</th>
-                    <th>ToDo</th>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>ToDo</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -1,7 +1,4 @@
 import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import { BsArrowsFullscreen } from 'react-icons/bs';
 
 import './App.css';
@@ -11,11 +8,6 @@ export default function Welcome(props) {
   const setFullScreen = () => {
     window.rpc.req('fullScreen');
   }
-
-  const showNotification = () => {
-    return new Notification('Title', {
-      body: 'Notification from the Renderer Process'
-  })} 
 
   return (
     <div className="welcome">

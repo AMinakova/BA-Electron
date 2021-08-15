@@ -1,5 +1,4 @@
 const path = require('path');
-
 const { app, BrowserWindow, Menu, Tray, Notification, ipcMain, dialog } = require('electron');
 
 const NOTIFICATION_TITLE = 'This is Electron Notification'
@@ -8,6 +7,8 @@ const NOTIFICATION_BODY = 'Main Process in Electron started'
 const isDev = require('electron-is-dev');
 const fs = require('fs');
 const csv = require('csv-parser'); 
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+
 let tray = null
 let mainWin = null
 
@@ -151,6 +152,10 @@ ipcMain.on('showTodoItemContextMenu', (event, itemId) => {
   menu.popup(BrowserWindow.fromWebContents(event.sender))
 })
 
+ipcMain.on('fullScreen', (event, args) => {
+  mainWin.fullScreen = !mainWin.fullScreen;
+})
+
 ipcMain.on('openFileDialogSync', (event, args) => {
   const options = { 
     title: "Öffnen Sie .csv Datei",
@@ -162,41 +167,47 @@ ipcMain.on('openFileDialogSync', (event, args) => {
   event.returnValue = dialog.showOpenDialogSync(options)
 })
 
-ipcMain.on('fullScreen', (event, args) => {
-  mainWin.fullScreen = !mainWin.fullScreen;
+ipcMain.on('saveFileDialogSync', (event, args) => {
+  const options = { 
+    title: "Speichern Sie .csv Datei",
+    filters: [{
+      name: ".csv Files",
+      extensions: ["csv"],
+    }],
+    defaultPath: args,
+  }
+  event.returnValue = dialog.showSaveDialogSync(options)
+})
+
+ipcMain.on('readFile', (event, args) => {
+  const toDoList = []
+  fs.createReadStream(args)
+  .pipe(csv())
+  .on('data', (row) => toDoList.push({
+    date: new Date(row.Datum),
+    text: row.Text,
+  }))
+  .on('end', function () {
+    event.returnValue = toDoList
+  })
+  .on('error', () => event.returnValue = false)
 })
 
 ipcMain.on('saveFile', (event, args) => {
-  console.log(args)
-  fs.appendFile(args[0], args[1], (err) => {
-    if (err) {
-      console.log(err);
-    }})
-  event.returnValue = true
-})
-ipcMain.on('readFile', (event, args) => {
-  const toDoList = []
-  console.log(args)
-  fs.createReadStream(args)
-  .pipe(csv())
-  .on('data', function (row) {
-    // console.log('some data')
-    // console.log("hier schould be row ------>", row)
-    const toDoItem = {
-        date: row.Datum,
-        text: row.Text,
-        done: row.Done
-    }
-    // console.log("hier schould be todoitem ------>", toDoItem)
-    toDoList.push(toDoItem)
-  })
-  .on('end', function () {
-    console.log("hier schould be todolist ------>")//, toDoList)
-    console.table(toDoList)
-    event.returnValue = toDoList
-      
-      // TODO: SAVE users data to another file
+  const [path, todoList] = args;
+  const csvWriter = createCsvWriter({
+    path,
+    header: [
+        {id: 'date', title: 'Datum'},
+        {id: 'text', title: 'Text'},
+    ]
+  });
+
+  const transformedList = todoList.map(el => ({...el, date: el.date.toISOString()}))
+  csvWriter.writeRecords(transformedList)
+    .then(() => event.returnValue = true)
+    .catch((reason) => {
+      dialog.showErrorBox('Error saving file', reason.toString())
+      event.returnValue = false;
     })
-  .on('error', () => event.returnValue = false)
-  // event.returnValue = false
 })

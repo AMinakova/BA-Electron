@@ -17,7 +17,7 @@ contextBridge.exposeInMainWorld(
         },
         reqSync: (channel, data) => {
             // whitelist channels
-            let validChannels = ['openFileDialogSync', 'saveFile', 'readFile'];
+            let validChannels = ['openFileDialogSync', 'saveFileDialogSync', 'readFile', 'saveFile'];
             if (validChannels.includes(channel)) {
                 return ipcRenderer.sendSync(channel, data);
             }

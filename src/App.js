@@ -6,7 +6,6 @@ import ItemsList from './ItemsList'
 import ToDoItem from './ToDoItem';
 
 export default function App() {
-  var parse = require('csv-parse');
   const [state, setState] = useState(0)
   const [toDoList, setToDoList] = useState([])
 
@@ -63,8 +62,15 @@ export default function App() {
   function openFileWithDialog() {
     const fileNames = window.rpc.reqSync('openFileDialogSync');
     if (fileNames) {
-      const toDoList = window.rpc.reqSync("readFile", fileNames[0]);
+      const toDoList = window.rpc.reqSync('readFile', fileNames[0]);
       showOpenedItemsList(toDoList);
+    }
+  }
+
+  function saveFileWithDialog(listName) {
+    const filePath = window.rpc.reqSync('saveFileDialogSync', listName);
+    if (filePath) {
+      window.rpc.reqSync('saveFile', [filePath, toDoList]);
     }
   }
   
@@ -75,21 +81,6 @@ export default function App() {
     //showNotification();
     showItemsList();
   }
-
-  //writeToCSVFile
-  function writeToCSVFile() {
-    const filename = 'C:/Users/ganna.minakova/Desktop/BachelorArbeit/Electron Todo/react-electron/output.csv';
-    const data = [filename, extractAsCSV()]
-    window.rpc.reqSync('saveFile', data);
-  }
-  
-  function extractAsCSV() {
-    const header = ['Datum', 'Text', 'Done'];
-    const rows = toDoList.map(item =>
-       `${item.date},${item.text},${item.done}`
-    );
-    return header.concat(rows).join("\n");
-  }
   
   function getPage(state) {
     switch(state) {
@@ -98,7 +89,7 @@ export default function App() {
       case 1:
         return <CreateToDo showItemsList={showItemsList} saveToDoItem={saveToDoItem} />;
       case 2:
-        return <ItemsList toDoList={toDoList} showCreateToDo={showCreateToDo} writeToCSVFile={writeToCSVFile} />
+        return <ItemsList toDoList={toDoList} showCreateToDo={showCreateToDo} saveFile={saveFileWithDialog} />
       default:
         break;
     }
