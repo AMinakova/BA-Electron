@@ -82,16 +82,22 @@ function setMainMenu() {
           }
         },
         { type: 'separator' },
+        { role: 'reload', accelerator: 'F5' },
+        { role: 'forceReload' },
         {
-          label: 'Close',
-          accelerator: 'Ctrl + F2',
+          label: 'Restart',
+          accelerator: 'Ctrl + F9',
           click() {
-              app.quit();
-          }
-        }
+            app.relaunch();
+            app.quit();
+          },
+        },
+        { role: 'quit', accelerator: 'Ctrl + F2', },
       ]
-    }
+    },
+    { role: 'editMenu' },
   ];
+
   Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
