@@ -8,9 +8,6 @@ import './App.css';
 import React from 'react'
 
 export default function Welcome(props) {
-  
-
-  
   const setFullScreen = () => {
     window.rpc.req('fullScreen');
   }
@@ -20,17 +17,7 @@ export default function Welcome(props) {
       body: 'Notification from the Renderer Process'
   })} 
 
-  const openDialog = () => {
-    const fileNames = window.rpc.reqSync('openFileDialogSync');
-    if(fileNames) {
-        const toDoList = window.rpc.reqSync('readFile', fileNames[0])
-        props.showOpenedItemsList(toDoList)
-    }
-    
-  }
-
   return (
-    
     <div className="welcome">
         <div className="icon" >
             <BsArrowsFullscreen onClick={setFullScreen} title="Vollbildmodus anmachen"/>
@@ -41,7 +28,7 @@ export default function Welcome(props) {
             <br/>Das ist klein App um Liste zu schreiben, speichern und auslesen. Fang an deine erste Liste zu erstellen oder öffne deine Liste und korriegiere sie
         </div>
         <div className="buttonGroup">
-            <Button className="button" variant="outline-primary" onClick={openDialog} >Datei öffnen</Button>
+            <Button className="button" variant="outline-primary" onClick={props.openFile}>Datei öffnen</Button>
             <Button className="button" variant="primary" onClick= {props.showCreateToDo}>Liste erstellen</Button>
         </div>
     </div>

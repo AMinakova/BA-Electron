@@ -19,13 +19,18 @@ contextBridge.exposeInMainWorld(
             }
         },
 
-        // currently not used, draft for if needed:
-        // response: (channel, func) => {
-        //     let validChannels = ['fromMain'];
-        //     if (validChannels.includes(channel)) {
-        //         // Deliberately strip event as it includes `sender` 
-        //         ipcRenderer.on(channel, (event, ...args) => func(...args));
-        //     }
-        // }
+        bind: (channel, func) => {
+            let validChannels = ['startOpenFile'];
+            if (validChannels.includes(channel)) {
+                // Deliberately strip event as it includes `sender` 
+                ipcRenderer.on(channel, (event, ...args) => func(...args));
+            }
+        },
+        unbindAll: (channel, func) => {
+            let validChannels = ['startOpenFile'];
+            if (validChannels.includes(channel)) {
+                ipcRenderer.removeAllListeners(channel);
+            }
+        },
     }
 );

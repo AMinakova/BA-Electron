@@ -78,8 +78,7 @@ function setMainMenu() {
           label: 'Open',
           accelerator: 'Ctrl + F1',
           click() {
-            const result = dialog.showOpenDialogSync()
-
+            mainWin.webContents.send('startOpenFile');
           }
         },
         { type: 'separator' },

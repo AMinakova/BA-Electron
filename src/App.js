@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import './App.css';
 import Welcome from './Welcome'
 import CreateToDo from './CreateToDo'
@@ -6,11 +6,16 @@ import ItemsList from './ItemsList'
 import ToDoItem from './ToDoItem';
 
 export default function App() {
-
-
   var parse = require('csv-parse');
   const [state, setState] = useState(0)
   const [toDoList, setToDoList] = useState([])
+
+  useEffect(() => {
+    window.rpc.bind('startOpenFile', openFileWithDialog);
+    return function() {
+      window.rpc.unbindAll('startOpenFile');
+    }
+  })
   
   const showCreateToDo = () => {
     setState(1);
@@ -23,10 +28,19 @@ export default function App() {
     setToDoList(toDoList)
     setState(2)
   }
+
   const showNotification = () => {
     return new Notification('Erfolg', {
       body: 'ToDo Eintrag ist gespeichert'
-  })} 
+  })}
+
+  function openFileWithDialog() {
+    const fileNames = window.rpc.reqSync('openFileDialogSync');
+    if (fileNames) {
+      const toDoList = window.rpc.reqSync("readFile", fileNames[0]);
+      showOpenedItemsList(toDoList);
+    }
+  }
   
   function saveToDoItem(toDoText) {
     var toDoItem = new ToDoItem(toDoText);
@@ -54,11 +68,11 @@ export default function App() {
   function getPage(state) {
     switch(state) {
       case 0:
-        return <Welcome showCreateToDo={showCreateToDo} showOpenedItemsList={showOpenedItemsList}/>;
+        return <Welcome showCreateToDo={showCreateToDo} openFile={openFileWithDialog} />;
       case 1:
-        return <CreateToDo showItemsList={showItemsList} saveToDoItem={saveToDoItem}/>;
+        return <CreateToDo showItemsList={showItemsList} saveToDoItem={saveToDoItem} />;
       case 2:
-        return <ItemsList toDoList={toDoList} showCreateToDo={showCreateToDo} writeToCSVFile={writeToCSVFile}/>
+        return <ItemsList toDoList={toDoList} showCreateToDo={showCreateToDo} writeToCSVFile={writeToCSVFile} />
       default:
         break;
     }
