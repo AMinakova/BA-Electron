@@ -1,17 +1,16 @@
 const path = require('path');
+const fs = require('fs');
 const { app, BrowserWindow, Menu, Tray, Notification, ipcMain, dialog } = require('electron');
+
+const isDev = require('electron-is-dev');
+const csv = require('csv-parser'); 
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 const NOTIFICATION_TITLE = 'This is Electron Notification'
 const NOTIFICATION_BODY = 'Main Process in Electron started'
 
-const isDev = require('electron-is-dev');
-const fs = require('fs');
-const csv = require('csv-parser'); 
-const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-
 let tray = null
 let mainWin = null
-
 
 
 function createWindow() {
@@ -19,12 +18,12 @@ function createWindow() {
   const win = mainWin = new BrowserWindow({
     width: 650,
     height: 450,
-    icon: "extraResources/favicon.ico",
+    icon: path.join(__dirname, '../extraResources/favicon.ico'),
     webPreferences: {
       // nodeIntegration: false,
       // enableRemoteModule: false,
       // contextIsolation: true,
-      preload: path.join(app.getAppPath(), isDev ? 'public' : '', 'preload.js'),
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
@@ -40,7 +39,7 @@ function createWindow() {
     win.webContents.openDevTools({ mode: 'detach' });
   }
 //add icon in tray
-  tray = new Tray('C:/Users/ganna.minakova/Desktop/BachelorArbeit/Electron Todo/react-electron/public/favicon.ico')
+  tray = new Tray(path.join(__dirname, '../extraResources/favicon.ico'))
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Show App', click: () => {
       win.maximize();
@@ -67,7 +66,7 @@ function createWindow() {
 }
 
 function showNotification () {
-  // new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show()
+  new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show()
 }
 
 function setMainMenu() {
@@ -139,10 +138,10 @@ ipcMain.on('showGlobalContextMenu', (event) => {
 
 ipcMain.on('showTodoItemContextMenu', (event, itemId) => {
   const template = [
-    { label: 'Todo Item ctx menu (no action)', },
+    { label: 'Hier ist das Todo Kontext-Menu:' },
     { type: 'separator' },
     {
-      label: 'Delete this item',
+      label: 'Das Todo löschen',
       click() {
         event.sender.send('deleteTodoItem', itemId)
       },
@@ -158,7 +157,7 @@ ipcMain.on('fullScreen', (event, args) => {
 
 ipcMain.on('openFileDialogSync', (event, args) => {
   const options = { 
-    title: "Öffnen Sie .csv Datei",
+    title: "Öffne .csv Datei",
     filters: [{
       name: ".csv Files",
       extensions: ["csv"]
@@ -169,7 +168,7 @@ ipcMain.on('openFileDialogSync', (event, args) => {
 
 ipcMain.on('saveFileDialogSync', (event, args) => {
   const options = { 
-    title: "Speichern Sie .csv Datei",
+    title: "Speicher .csv Datei",
     filters: [{
       name: ".csv Files",
       extensions: ["csv"],

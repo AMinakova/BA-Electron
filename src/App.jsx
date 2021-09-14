@@ -54,9 +54,10 @@ export default function App() {
     setToDoList(prevTodos => prevTodos.filter((_el, arrIdx) => arrIdx !== todoId))
   }
 
-  const showNotification = () => {
-    return new Notification('Erfolg', {
-      body: 'ToDo Eintrag ist gespeichert'
+  const showNotification = (listName) => {
+    return new Notification('Erfolg!', {
+      title: 'Erfolg!',
+      body: `${listName} ist gespeichert`
   })}
 
   function openFileWithDialog() {
@@ -71,6 +72,7 @@ export default function App() {
     const filePath = window.rpc.reqSync('saveFileDialogSync', listName);
     if (filePath) {
       window.rpc.reqSync('saveFile', [filePath, toDoList]);
+      showNotification(listName);
     }
   }
   
@@ -78,7 +80,6 @@ export default function App() {
     var toDoItem = new ToDoItem(toDoText);
     toDoList.push(toDoItem);
     setToDoList(toDoList);
-    //showNotification();
     showItemsList();
   }
   
@@ -96,7 +97,7 @@ export default function App() {
   }
 
   return (
-    <div className="padding">
+    <div className="pages">
       {getPage(state)}
     </div>
   );

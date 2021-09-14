@@ -29,8 +29,8 @@ export default function ItemsList(props) {
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Date</th>
-                        <th>ToDo</th>
+                        <th>Datum</th>
+                        <th>Aufgabe</th>
                     </tr>
                 </thead>
                 <tbody>

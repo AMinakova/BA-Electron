@@ -57,14 +57,13 @@
   margin: 20px;
 }
 
-.padding {
+.pages {
   padding: 50px;
   align-content: center;
   height:100%;
 }
+
 .inputField {
   padding: 20px 0px 20px 0px;
   height: 80%;
-}
-.button {
 }

@@ -1,24 +1,14 @@
 {
   "name": "react-electron",
+  "productName": "Electron ToDo",
   "version": "0.1.0",
   "private": true,
   "main": "public/electron.js",
   "homepage": "./",
   "dependencies": {
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "bootstrap": "^5.0.2",
-    "cross-env": "^7.0.3",
     "csv-parser": "^3.0.0",
     "csv-writer": "^1.6.0",
-    "react": "^17.0.2",
-    "react-bootstrap": "^2.0.0-beta.4",
-    "react-dom": "^17.0.2",
-    "react-icons": "^4.2.0",
-    "react-scripts": "4.0.3",
-    "smalltalk": "^4.0.7",
-    "web-vitals": "^1.0.1"
+    "electron-is-dev": "^2.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -47,10 +37,22 @@
     ]
   },
   "devDependencies": {
+    "bootstrap": "^5.0.2",
+    "cross-env": "^7.0.3",
+    "react": "^17.0.2",
+    "react-bootstrap": "^2.0.0-beta.4",
+    "react-dom": "^17.0.2",
+    "react-icons": "^4.2.0",
+    "react-scripts": "4.0.3",
+    "smalltalk": "^4.0.7",
+    "web-vitals": "^1.0.1",
     "concurrently": "^6.2.0",
     "electron": "^13.1.6",
-    "electron-is-dev": "^2.0.0",
-    "wait-on": "^6.0.0"
+    "electron-packager": "^15.3.0",
+    "wait-on": "^6.0.0",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10"
   },
   "build": {
     "extraResources": [
