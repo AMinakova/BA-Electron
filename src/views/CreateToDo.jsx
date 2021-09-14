@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { FormControl, Button } from 'react-bootstrap';
-import './App.css';
+import '../styles/App.css';
 
 
 export default function CreateToDo(props) {

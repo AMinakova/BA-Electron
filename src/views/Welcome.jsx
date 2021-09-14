@@ -1,7 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import { BsArrowsFullscreen } from 'react-icons/bs';
-
-import './App.css';
+import '../styles/App.css';
 import React from 'react'
 
 export default function Welcome(props) {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Table, Button } from 'react-bootstrap';
-import './App.css';
+import '../styles/App.css';
 
 export default function ItemsList(props) {
     

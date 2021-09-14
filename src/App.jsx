@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react'
-import './App.css';
-import Welcome from './Welcome'
-import CreateToDo from './CreateToDo'
-import ItemsList from './ItemsList'
-import ToDoItem from './ToDoItem';
+import './styles/App.css';
+import Welcome from './views/Welcome'
+import CreateToDo from './views/CreateToDo'
+import ItemsList from './views/ItemsList'
+import ToDoItem from './models/ToDoItem';
 
 export default function App() {
   const [state, setState] = useState(0)
